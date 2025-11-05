@@ -1,9 +1,12 @@
+import * as fs from 'node:fs/promises'
+import * as path from 'node:path'
 import { FastMCP } from 'fastmcp'
-import type {
-  CreatePostDto,
-  CreateUploadUrlDto,
-  PlatformConfigurationsDto,
-  UpdatePostDto,
+import {
+  type CreatePostDto,
+  type CreateUploadUrlDto,
+  CreateUploadUrlDtoMimeTypeEnum,
+  type PlatformConfigurationsDto,
+  type UpdatePostDto,
 } from 'post-bridge-api'
 import { z } from 'zod'
 import { version } from '../package.json'
@@ -164,7 +167,8 @@ server.addTool({
 
 server.addTool({
   name: 'posts_create',
-  description: 'Create a new post.',
+  description:
+    'Create a new post. For local media files, use media_upload tool first to get media IDs, then pass them here.',
   parameters: z.object({
     caption: z.string().min(1).describe('Caption text for the post'),
     scheduledAt: z.iso
@@ -181,7 +185,9 @@ server.addTool({
     media: z
       .array(z.string())
       .optional()
-      .describe('Array of media IDs associated with the post'),
+      .describe(
+        'Array of media IDs (use media_upload tool to upload local files first)',
+      ),
     mediaUrls: z
       .array(z.url())
       .optional()
@@ -505,5 +511,92 @@ server.addTool({
       type,
     )
     return JSON.stringify(res)
+  },
+})
+
+server.addTool({
+  name: 'media_upload',
+  description:
+    'Upload a media file from local filesystem. Handles the entire upload process and returns the media ID.',
+  parameters: z.object({
+    filePath: z
+      .string()
+      .min(1)
+      .describe(
+        'Absolute or relative path to the media file on the local filesystem',
+      ),
+  }),
+  execute: async (args) => {
+    const { filePath } = args as { filePath: string }
+
+    try {
+      // Read file stats
+      const stats = await fs.stat(filePath)
+      const sizeBytes = stats.size
+
+      // Get file name and determine MIME type
+      const fileName = path.basename(filePath)
+      const ext = path.extname(filePath).toLowerCase()
+
+      let mimeType: CreateUploadUrlDtoMimeTypeEnum
+      switch (ext) {
+        case '.png':
+          mimeType = CreateUploadUrlDtoMimeTypeEnum.ImagePng
+          break
+        case '.jpg':
+        case '.jpeg':
+          mimeType = CreateUploadUrlDtoMimeTypeEnum.ImageJpeg
+          break
+        case '.mp4':
+          mimeType = CreateUploadUrlDtoMimeTypeEnum.VideoMp4
+          break
+        case '.mov':
+          mimeType = CreateUploadUrlDtoMimeTypeEnum.VideoQuicktime
+          break
+        default:
+          throw new Error(
+            `Unsupported file type: ${ext}. Supported types: .png, .jpg, .jpeg, .mp4, .mov`,
+          )
+      }
+
+      // Step 1: Create upload URL
+      const uploadResponse = await mediaApi.mediaControllerCreateUploadUrlV1({
+        name: fileName,
+        mimeType,
+        sizeBytes,
+      })
+
+      // Step 2: Read file content
+      const fileBuffer = await fs.readFile(filePath)
+
+      // Step 3: Upload to the signed URL
+      const uploadResult = await fetch(uploadResponse.uploadUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': mimeType,
+        },
+        body: fileBuffer,
+      })
+
+      if (!uploadResult.ok) {
+        throw new Error(
+          `Upload failed with status ${uploadResult.status}: ${await uploadResult.text()}`,
+        )
+      }
+
+      // Return the media ID
+      return JSON.stringify({
+        mediaId: uploadResponse.mediaId,
+        fileName: fileName,
+        mimeType: mimeType,
+        sizeBytes: sizeBytes,
+        success: true,
+      })
+    } catch (error) {
+      return JSON.stringify({
+        success: false,
+        error: error instanceof Error ? error.message : String(error),
+      })
+    }
   },
 })
