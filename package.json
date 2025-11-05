@@ -16,6 +16,7 @@
   },
   "scripts": {
     "build": "bunup",
+    "build:cli": "bun build --compile --minify --bytecode ./src/cli.ts --outfile ./dist/post-bridge-mcp",
     "dev": "bunup --watch",
     "postinstall": "bun simple-git-hooks",
     "lint": "biome check .",
@@ -58,8 +59,10 @@
   },
   "types": "./dist/index.d.ts",
   "dependencies": {
+    "effect": "^3.19.0",
     "fastmcp": "^3.22.0",
     "post-bridge-api": "^0.1.1",
+    "sury": "^11.0.0-alpha.4",
     "zod": "^4.1.12"
   }
 }
