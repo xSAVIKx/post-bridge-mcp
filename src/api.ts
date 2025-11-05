@@ -2,6 +2,9 @@ import {
   type Configuration,
   type ConfigurationParameters,
   createConfiguration,
+  MediaApi,
+  PostResultsApi,
+  PostsApi,
   ServerConfiguration,
   SocialAccountsApi,
 } from 'post-bridge-api'
@@ -37,3 +40,7 @@ const config = getApiConfig()
 export const socialAccountsApi: SocialAccountsApi = new SocialAccountsApi(
   config,
 )
+
+export const postsApi: PostsApi = new PostsApi(config)
+export const postResultsApi: PostResultsApi = new PostResultsApi(config)
+export const mediaApi: MediaApi = new MediaApi(config)
