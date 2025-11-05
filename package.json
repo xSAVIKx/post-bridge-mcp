@@ -56,5 +56,10 @@
   "simple-git-hooks": {
     "pre-commit": "bun run lint && bun run type-check"
   },
-  "types": "./dist/index.d.ts"
+  "types": "./dist/index.d.ts",
+  "dependencies": {
+    "fastmcp": "^3.22.0",
+    "post-bridge-api": "^0.1.1",
+    "zod": "^4.1.12"
+  }
 }
