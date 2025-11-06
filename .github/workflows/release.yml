@@ -42,11 +42,19 @@ jobs:
         continue-on-error: true
         run: bun run test
 
-      - name: Build
+      - name: Build nix
         continue-on-error: true
+        if: matrix.os != 'windows'
         run: |
           VERSION=$(bun pm pkg get version | tr -d '"')
           bun build --compile --minify --bytecode ./src/cli.ts --outfile ./dist/post-bridge-mcp-${{matrix.os}}-$VERSION
+          chmod +x ./dist/post-bridge-mcp-${{matrix.os}}-$VERSION
+      - name: Build windows
+        continue-on-error: true
+        if: matrix.os == 'windows'
+        run: |
+          $VERSION = (bun pm pkg get version).Trim('"')
+          bun build --compile --minify --bytecode ./src/cli.ts --outfile ./dist/post-bridge-mcp-windows-$VERSION
       - name: Store artifact
         uses: actions/upload-artifact@v5
         with:
