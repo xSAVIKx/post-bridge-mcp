@@ -8,14 +8,17 @@
   },
   "license": "MIT",
   "files": [
-    "dist"
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/cli.js",
+    "dist/cli.d.ts"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/xSAVIKx/post-bridge-mcp.git"
   },
   "scripts": {
-    "build": "bunup",
+    "build": "bunup --no-splitting",
     "build:cli": "bun build --compile --minify --bytecode ./src/cli.ts --outfile ./dist/post-bridge-mcp",
     "dev": "bunup --watch",
     "postinstall": "bun simple-git-hooks",
