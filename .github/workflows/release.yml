@@ -10,7 +10,52 @@ permissions:
   id-token: write
 
 jobs:
+  pre-release:
+    name: Pre-Release Package
+    runs-on: ${{ matrix.os }}-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu, macos, windows ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Type check
+        run: bun run type-check
+
+      - name: Lint
+        continue-on-error: true
+        run: bun run lint
+
+      - name: Run tests
+        continue-on-error: true
+        run: bun run test
+
+      - name: Build
+        continue-on-error: true
+        run: |
+          VERSION=$(bun pm pkg get version | tr -d '"')
+          bun build --compile --minify --bytecode ./src/cli.ts --outfile ./dist/post-bridge-mcp-${{matrix.os}}-$VERSION
+      - name: Store artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: post-bridge-mcp-${{ matrix.os }}
+          path: ./dist/post-bridge-mcp*
+          retention-days: 10
+
   release:
+    needs: pre-release
     name: Release Package
     runs-on: ubuntu-latest
     steps:
@@ -41,9 +86,25 @@ jobs:
       - name: Build
         continue-on-error: true
         run: bun run build
+      - name: Download Ubuntu CLI
+        uses: actions/download-artifact@v5
+        with:
+          name: post-bridge-mcp-ubuntu
+          path: ./dist
+      - name: Download MacOS CLI
+        uses: actions/download-artifact@v5
+        with:
+          name: post-bridge-mcp-macos
+          path: ./dist
+      - name: Download Windows CLI
+        uses: actions/download-artifact@v5
+        with:
+          name: post-bridge-mcp-windows
+          path: ./dist
 
       - name: Generate changelog
-        run: bunx changelogithub
+        run: |
+          bunx changelogithub --assets './dist/**'
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
