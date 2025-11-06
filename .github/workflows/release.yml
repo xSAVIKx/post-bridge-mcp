@@ -92,6 +92,9 @@ jobs:
 
       - name: Build
         run: bun run build
+      - name: Package Gemini extension
+        run: |
+          tar -czf post-bridge.tar.gz dist/cli.js dist/cli.d.ts gemini-extension.json README.md
       - name: Download Ubuntu CLI
         uses: actions/download-artifact@v5
         with:
@@ -110,7 +113,7 @@ jobs:
 
       - name: Generate changelog
         run: |
-          bunx changelogithub --assets './dist/*'
+          bunx changelogithub --assets './dist/*' --assets 'post-bridge.tar.gz'
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
