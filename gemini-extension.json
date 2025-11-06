@@ -9,10 +9,11 @@
     }
   ],
   "mcpServers": {
-    "post-bridge": {
+    "post-bridge-mcp": {
       "command": "node",
       "args": ["${extensionPath}${/}dist${/}cli.js"],
-      "cwd": "${extensionPath}"
+      "cwd": "${extensionPath}",
+      "timeout": 60000
     }
   }
 }
