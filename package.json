@@ -11,7 +11,8 @@
     "dist/index.js",
     "dist/index.d.ts",
     "dist/cli.js",
-    "dist/cli.d.ts"
+    "dist/cli.d.ts",
+    "gemini-extension.json"
   ],
   "repository": {
     "type": "git",
