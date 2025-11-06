@@ -64,6 +64,7 @@ jobs:
     needs: pre-release
     name: Release Package
     runs-on: ubuntu-latest
+    environment: "npm"
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -109,7 +110,7 @@ jobs:
 
       - name: Generate changelog
         run: |
-          bunx changelogithub --assets './dist/**'
+          bunx changelogithub --assets './dist/*'
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
