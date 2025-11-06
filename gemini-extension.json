@@ -1,6 +1,6 @@
 {
   "name": "post-bridge",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "settings": [
     {
       "name": "post-bridge API key",
