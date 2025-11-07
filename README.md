@@ -16,6 +16,12 @@ Note about file names (from our CI config):
 - Linux (Ubuntu): `post-bridge-mcp-ubuntu-<version>`
 - Windows: `post-bridge-mcp-windows-<version>`
 
+### Gemini CLI Extension
+
+```bash
+gemini extensions install https://github.com/xSAVIKx/post-bridge-mcp
+```
+
 ### macOS (zsh)
 
 ```zsh
