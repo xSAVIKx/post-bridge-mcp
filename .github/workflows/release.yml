@@ -92,9 +92,11 @@ jobs:
 
       - name: Build
         run: bun run build
+      - name: Build CLI
+        run: bun run build:cli
       - name: Package Gemini extension
         run: |
-          tar -czf post-bridge.tar.gz dist/cli.js dist/cli.d.ts gemini-extension.json README.md
+          tar -czf post-bridge.tar.gz dist/post-bridge-mcp.js gemini-extension.json README.md
       - name: Download Ubuntu CLI
         uses: actions/download-artifact@v5
         with:

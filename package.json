@@ -1,6 +1,6 @@
 {
   "name": "post-bridge-mcp",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Post-bridge unofficial MCP server",
   "homepage": "https://github.com/xSAVIKx/post-bridge-mcp#readme",
   "bugs": {
@@ -20,7 +20,7 @@
   },
   "scripts": {
     "build": "bunup --no-splitting",
-    "build:cli": "bun build --compile --minify --bytecode ./src/cli.ts --outfile ./dist/post-bridge-mcp",
+    "build:cli": "bun build --minify ./src/cli.ts --outfile ./dist/post-bridge-mcp-cli.js --target node",
     "dev": "bunup --watch",
     "postinstall": "bun simple-git-hooks",
     "lint": "biome check .",

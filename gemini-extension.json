@@ -1,6 +1,6 @@
 {
   "name": "post-bridge",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "settings": [
     {
       "name": "post-bridge API key",
@@ -11,7 +11,7 @@
   "mcpServers": {
     "post-bridge-mcp": {
       "command": "node",
-      "args": ["${extensionPath}${/}dist${/}cli.js"],
+      "args": ["${extensionPath}${/}dist${/}post-bridge-mcp-cli.js"],
       "cwd": "${extensionPath}",
       "timeout": 60000
     }
