@@ -19,8 +19,8 @@ Note about file names (from our CI config):
 ### macOS (zsh)
 
 ```zsh
-# 1) Download the latest macOS binary (replace 0.1.1 with the latest version)
-VERSION=0.1.1
+# 1) Download the latest macOS binary (replace 0.1.5 with the latest version)
+VERSION=0.1.5
 curl -L -o post-bridge-mcp "https://github.com/xSAVIKx/post-bridge-mcp/releases/download/v$VERSION/post-bridge-mcp-macos-$VERSION"
 chmod +x post-bridge-mcp
 
@@ -36,8 +36,8 @@ export POST_BRIDGE_API_TOKEN="<your_api_token>"
 ### Linux (bash)
 
 ```bash
-# 1) Download the latest Linux binary (replace 0.1.1 with the latest version)
-VERSION=0.1.1
+# 1) Download the latest Linux binary (replace 0.1.5 with the latest version)
+VERSION=0.1.5
 curl -L -o post-bridge-mcp "https://github.com/xSAVIKx/post-bridge-mcp/releases/download/v$VERSION/post-bridge-mcp-ubuntu-$VERSION"
 chmod +x post-bridge-mcp
 
@@ -53,8 +53,8 @@ export POST_BRIDGE_API_TOKEN="<your_api_token>"
 ### Windows (PowerShell)
 
 ```powershell
-# 1) Download the latest Windows binary (replace 0.1.1 with the latest version)
-$version = "0.1.1"
+# 1) Download the latest Windows binary (replace 0.1.5 with the latest version)
+$version = "0.1.5"
 $asset   = "post-bridge-mcp-windows-$version.exe"
 $uri     = "https://github.com/xSAVIKx/post-bridge-mcp/releases/download/v$version/$asset"
 Invoke-WebRequest -Uri $uri -OutFile "post-bridge-mcp.exe"
